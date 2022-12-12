@@ -8,7 +8,7 @@ import tkinter
 import traceback
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-import pyodbc
+import pyodbc # change something
 from tkinter import messagebox
 from admin import Ui_MainWindow
 
