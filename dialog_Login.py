@@ -9,6 +9,7 @@ import traceback
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 import pyodbc
+from tkinter import *
 from tkinter import messagebox
 from admin import Ui_MainWindow
 
@@ -51,27 +52,29 @@ class Ui_Dialog(object):
         try:
             username = self.inputAccount.text()
             password = self.lineEdit.text()
-            # print(username, password)
             cursor = conn.cursor()
             cursor.execute("SELECT USERNAME, PASSWORD FROM ACCOUNT WHERE USERNAME='"+username+"' AND PASSWORD='"+password+"'")
-            print(cursor.fetchall())
             user = cursor.fetchone()
-            if username == "" and password == "":
-                messagebox.showinfo('Login', 'Vui long nhap day du thong tin!')
-            elif user is not None:
+            print(user)
+            if user is not None:
+                master = Tk()
+                master.withdraw()
                 messagebox.showinfo('Login', 'Yes')
+                cursor.execute("SELECT IDROLE FROM ACCOUNT WHERE ACCOUNT.USERNAME = '" + username + "'")
+                idUser = cursor.fetchone()
+                print(idUser)
+                if idUser[0] == 1:
+                    self.window = QtWidgets.QMainWindow()
+                    self.ui = Ui_MainWindow()
+                    print(type(self.window))
+                    self.ui.setupUi(self.window)
+                    self.window.show()
+                    Dialog.hide()
             else:
+                master = Tk()
+                master.withdraw()
                 messagebox.showinfo('Login', 'Sai tai khoan hoac mat khau. Vui long nhap lai!')
 
-            cursor.execute("SELECT IDROLE FROM ACCOUNT WHERE ACCOUNT.USERNAME = '"+username+"'")
-            idUser = cursor.fetchone()[0]
-            if idUser == 1:
-                print('hi')
-                self.window=QtWidgets.QMainWindow()
-                self.ui=Ui_MainWindow()
-                self.ui.setupUi(self.window)
-                self.window.show()
-                Dialog.hide()
         except:
             traceback.print_exc()
     def exit(self):

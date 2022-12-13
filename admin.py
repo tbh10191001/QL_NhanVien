@@ -16,9 +16,10 @@ import ai
 
 
 
+
 class Ui_MainWindow:
-    def setupUi(self, MainWindow, Dialog):
-        MainWindow.setObjectName("MainWindow")
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindaaaaow")
         MainWindow.resize(431, 396)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -56,38 +57,45 @@ class Ui_MainWindow:
         # Nhan Vien
         try:
             self.QLNV.clicked.connect(self.OpenEmployee)
+            self.QLNV.clicked.connect(MainWindow.close)
         except:
             traceback.print_exc()
         # Do an
         try:
             self.pushButton_3.clicked.connect(self.OpenProject)
+            self.pushButton_3.clicked.connect(MainWindow.close)
         except:
             traceback.print_exc()
         # Chuyen nganh
         try:
             self.pushButton_4.clicked.connect(self.OpenMajor)
+            self.pushButton_4.clicked.connect(MainWindow.close)
         except:
             traceback.print_exc()
         # Quyen
         try:
             self.pushButton.clicked.connect(self.OpenRole)
+            self.pushButton.clicked.connect(MainWindow.close)
         except:
             traceback.print_exc()
         # Phong ban
         try:
             self.pushButton_5.clicked.connect(self.OpenDepartment)
+            self.pushButton_5.clicked.connect(MainWindow.close)
         except:
             traceback.print_exc()
         # Chuc nang thong minh
         try:
             self.pushButton_7.clicked.connect(self.OpenAI)
+            self.pushButton_7.clicked.connect(MainWindow.close)
         except:
             traceback.print_exc()
 
-        # try:
-            # self.pushButton_6.clicked.connect(self.Exit)
-        # except:
-        #     traceback.print_exc()
+        try:
+            self.pushButton_6.clicked.connect(self.Exit)
+            self.pushButton_6.clicked.connect(MainWindow.close)
+        except:
+            traceback.print_exc()
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -106,11 +114,11 @@ class Ui_MainWindow:
 
     def OpenEmployee(self):
         try:
+            #print(type(self.window))
             self.window = QtWidgets.QMainWindow()
             self.ui = Employee.Ui_admin()
             self.ui.setupUi(self.window)
             self.window.show()
-            MainWindow.close()
         except:
             traceback.print_exc()
     def OpenProject(self):
@@ -119,7 +127,6 @@ class Ui_MainWindow:
             self.ui = Product.Ui_MainWindow()
             self.ui.setupUi(self.windowProject)
             self.windowProject.show()
-            MainWindow.close()
         except:
             traceback.print_exc()
     def OpenMajor(self):
@@ -128,7 +135,6 @@ class Ui_MainWindow:
             self.ui = Major.Ui_MainWindow()
             self.ui.setupUi(self.windowProject)
             self.windowProject.show()
-            MainWindow.close()
         except:
             traceback.print_exc()
     def OpenRole(self):
@@ -137,7 +143,6 @@ class Ui_MainWindow:
             self.ui = Role.Ui_MainWindow()
             self.ui.setupUi(self.windowProject)
             self.windowProject.show()
-            MainWindow.close()
         except:
             traceback.print_exc()
     def OpenDepartment(self):
@@ -146,7 +151,6 @@ class Ui_MainWindow:
             self.ui = Department.Ui_MainWindow()
             self.ui.setupUi(self.windowProject)
             self.windowProject.show()
-            MainWindow.close()
         except:
             traceback.print_exc()
     def OpenAI(self):
@@ -155,17 +159,15 @@ class Ui_MainWindow:
             self.ui = ai.Ui_MainWindow()
             self.ui.setupUi(self.windowProject)
             self.windowProject.show()
-            MainWindow.close()
         except:
             traceback.print_exc()
     def Exit(self):
         try:
-            MainWindow.close()
+            import dialog_Login
             self.windowProject = QtWidgets.QDialog()
-            self.ui = dialog_Login.QDialog()
+            self.ui = dialog_Login.Ui_Dialog()
             self.ui.setupUi(self.windowProject)
             self.windowProject.show()
-            print('hihi')
         except:
             traceback.print_exc()
 
