@@ -110,7 +110,7 @@ class Ui_Dialog(object):
         self.loadCbbRole()
         self.loadData()
         self.okBtn.clicked.connect(self.okBtnClicked)
-        # self.cancelBtn.clicked.connect(self.cancelBtnClicked())
+        self.cancelBtn.clicked.connect(Dialog.close)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
     def loadData(self):
@@ -173,24 +173,15 @@ class Ui_Dialog(object):
                                   "Trusted_connection=yes;"
                                   "MARS_Connection=yes")
             password = self.inputPassword.text()
-            print(password)
             role = self.roleCbb.currentText()
             cursor = conn.cursor()
             sql = cursor.execute("SELECT IDROLE FROM ROLE WHERE ROLE.ROLENAME = '" + role + "'")
-            newRole = sql.fetchone()[0]
-            print(newRole)
-            print(type(str(newRole)))
+            newRole = sql.fetchone()
             cursor1 = conn.cursor()
-            print(self.get_id())
-            sql1 = cursor1.execute("UPDATE ACCOUNT SET PASSWORD = '" + str(password) + "', IDROLE = '" + str(newRole) + "' WHERE ACCOUNT.IDEMP = '" + self.get_id() + "'")
+            cursor1.execute("UPDATE ACCOUNT SET PASSWORD = '" + str(password) + "', IDROLE = '" + str(newRole[0]) + "' WHERE ACCOUNT.IDEMP = '" + self.get_id() + "'")
+            conn.commit()
         except:
             traceback.print_exc()
-
-    # def cancelBtnClicked(self):
-    #     try:
-    #
-    #     except:
-    #         traceback.print_exc()
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate

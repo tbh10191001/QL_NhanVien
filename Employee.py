@@ -268,12 +268,12 @@ class Ui_admin(object):
         self.loadGender()
         self.tableNhanVien.clicked.connect(self.clickToShowData)
         self.resetBtn.clicked.connect(self.clickToReset)
-        # self.addBtn.clicked.connect(self.clickToAdd)
+        self.addBtn.clicked.connect(self.clickToAdd)
         self.viewAccountBtn.clicked.connect(self.openAccount)
-
+        self.createAccountBtn.clicked.connect(self.openCreatAccount)
+        self.addCVBtn.clicked.connect(self.openCV)
         self.retranslateUi(admin)
         QtCore.QMetaObject.connectSlotsByName(admin)
-
 
     def loadData(self):
         try:
@@ -309,6 +309,9 @@ class Ui_admin(object):
                     tableRow += 1
         except:
             traceback.print_exc()
+
+    def reloadData(self):
+        self.tableNhanVien.set
     def loadCbbMajor(self):
         try:
             sever = 'localhost'
@@ -386,21 +389,38 @@ class Ui_admin(object):
 
     def clickToAdd(self):
         try:
+            sever = 'localhost'
+            database = 'HTTM'
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes;"
+                                  "MARS_Connection=yes")
             firstnameEmp = self.firstnameEmp.text()
+            print(firstnameEmp)
             lastnameEmp = self.lastnameEmp.text()
+            print(lastnameEmp)
             temp = self.dobEmp.date()
-            print(temp)
-            print(temp.toString("yyyy-MM-dd"))
             dobEmp = temp.toString("yyyy-MM-dd")
+            print(dobEmp)
             genderEmp = self.genderCbb.currentText()
+            print(genderEmp)
             addressEmp = self.addressEmp.text()
-            ratingEmp = self.ratingEmp.text()
+            print(addressEmp)
             majorEmp = self.majorCbb.currentText()
-            depEmp = self.depCbb.currentText()
             cursor = conn.cursor()
-            # cursor.execute(
-            #     "INSERT INTO EMPLOYEE(FISRTNAME, LASTNAME, DATEOFBIRTH, GENDER, ADDRESS, AVGRATING, IDVC, IDMAJOR,USERNAME, IDDEP) "
-            #     "VALUES(?,?,?,?,?,?,?,?,?,?)", (firstnameEmp, lastnameEmp, dobEmp, genderEmp, addressEmp, ratingEmp, , majorEmp, "A", depEmp))
+            sqlMajor = cursor.execute("SELECT IDMAJOR FROM MAJOR WHERE MAJOR.MAJOR = '" + str(majorEmp) + "'")
+            majorEmpSql = sqlMajor.fetchone()
+            print(majorEmpSql[0])
+            depEmp = self.depCbb.currentText()
+            cursor2 = conn.cursor()
+            sqlDep = cursor2.execute("SELECT IDDEP FROM DEPARTMENT WHERE DEPARTMENT.DEPNAME = '" + str(depEmp) + "'")
+            depEmpSql = sqlDep.fetchone()
+            print(depEmpSql[0])
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO EMPLOYEE(FISRTNAME, LASTNAME, DATEOFBIRTH, GENDER, ADDRESS, AVGRATING, IDVC, IDMAJOR, USERNAME, IDDEP) VALUES(?,?,?,?,?,?,?,?,?,?)", (firstnameEmp, lastnameEmp, dobEmp, genderEmp, addressEmp, None, None, majorEmpSql[0], None, depEmpSql[0]))
+            cursor.commit()
+            self.loadData()
         except:
             traceback.print_exc()
 
@@ -415,6 +435,27 @@ class Ui_admin(object):
         except:
             traceback.print_exc()
 
+    def openCreatAccount(self):
+        try:
+            import dialog_CreateAccount1
+            self.windowProject = QtWidgets.QMainWindow()
+            self.ui = dialog_CreateAccount1.Ui_MainWindow()
+            row = self.tableNhanVien.currentRow()
+            self.ui.set_id(self.tableNhanVien.item(row, 0).text())
+            self.ui.setupUi(self.windowProject)
+            self.windowProject.show()
+        except:
+            traceback.print_exc()
+
+    def openCV(self):
+        try:
+            import dialog_CV
+            self.windowProject=QtWidgets.QMainWindow()
+            self.ui=dialog_CV.Ui_Dialog()
+            self.ui.setupUi(self.windowProject)
+            self.windowProject.show()
+        except:
+            traceback.print_exc()
     def retranslateUi(self, admin):
         _translate = QtCore.QCoreApplication.translate
         admin.setWindowTitle(_translate("admin", "MainWindow"))
@@ -450,12 +491,11 @@ class Ui_admin(object):
         self.label_3.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">Họ:</span></p></body></html>"))
         self.label_4.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">Tên:</span></p></body></html>"))
         self.label_5.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">Ngày sinh:</span></p></body></html>"))
-        self.idEmp.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">123</span></p></body></html>"))
+        self.idEmp.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\"></span></p></body></html>"))
         self.label.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">ID Nhân viên:</span></p></body></html>"))
         self.label_6.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">Giới tính:</span></p></body></html>"))
         self.label_7.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">Địa chỉ:</span></p></body></html>"))
         self.label_8.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">Đánh giá:</span></p></body></html>"))
-        self.ratingEmp.setText(_translate("admin", "Kem"))
         self.label_11.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">Chuyên ngành:</span></p></body></html>"))
         self.label_12.setText(_translate("admin", "<html><head/><body><p><span style=\" font-size:12pt;\">Phòng ban:</span></p></body></html>"))
         self.resetBtn.setText(_translate("admin", "Reset"))
@@ -468,7 +508,6 @@ class Ui_admin(object):
 if __name__ == "__main__":
     sever = 'localhost'
     database = 'HTTM'
-    print(pyodbc.drivers())
     conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
                           "Server=localhost;"
                           "Database=HTTM;"
