@@ -269,9 +269,16 @@ class Ui_admin(object):
         self.tableNhanVien.clicked.connect(self.clickToShowData)
         self.resetBtn.clicked.connect(self.clickToReset)
         self.addBtn.clicked.connect(self.clickToAdd)
+        self.editBtn.clicked.connect(self.clickToEdit)
+        self.deleteBtn.clicked.connect(self.clickToDel)
         self.viewAccountBtn.clicked.connect(self.openAccount)
         self.createAccountBtn.clicked.connect(self.openCreatAccount)
         self.addCVBtn.clicked.connect(self.openCV)
+        try:
+            self.exitBtn.clicked.connect(admin.close)
+            self.exitBtn.clicked.connect(self.openAdmin)
+        except:
+            traceback.format_exc()
         self.retranslateUi(admin)
         QtCore.QMetaObject.connectSlotsByName(admin)
 
@@ -279,7 +286,6 @@ class Ui_admin(object):
         try:
             sever = 'localhost'
             database = 'HTTM'
-            print(pyodbc.drivers())
             conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
                                   "Server=localhost;"
                                   "Database=HTTM;"
@@ -287,11 +293,9 @@ class Ui_admin(object):
                                   "MARS_Connection=yes")
             cursor = conn.cursor()
             sql = cursor.execute("SELECT * FROM EMPLOYEE")
-            print(sql)
             tableRow = 0
             cursor2 = conn.cursor()
             cursor3 = conn.cursor()
-            cursor4 = conn.cursor()
             for rowData in sql:
                 rowNumber = self.tableNhanVien.rowCount()
                 self.tableNhanVien.insertRow(rowNumber)
@@ -310,8 +314,9 @@ class Ui_admin(object):
         except:
             traceback.print_exc()
 
-    def reloadData(self):
-        self.tableNhanVien.set
+    def setTableRow(self):
+        while self.tableNhanVien.rowCount() > 0:
+            self.tableNhanVien.removeRow(0)
     def loadCbbMajor(self):
         try:
             sever = 'localhost'
@@ -348,7 +353,7 @@ class Ui_admin(object):
 
     def loadGender(self):
         try:
-            gender = ["Nam", "Nữ"]
+            gender = ["Nam", "Nu"]
             for i in gender:
                 self.genderCbb.addItem(i)
         except:
@@ -363,10 +368,10 @@ class Ui_admin(object):
             temp = QDate.fromString(self.tableNhanVien.item(selectedRow, 3).text(), "yyyy-MM-dd")
             self.dobEmp.setDate(temp)
             self.genderCbb.setItemText(0, self.tableNhanVien.item(selectedRow, 4).text())
-            if self.tableNhanVien.item(selectedRow, 4).text() == "Nữ":
+            if self.tableNhanVien.item(selectedRow, 4).text() == "Nu":
                 self.genderCbb.setItemText(1, "Nam")
             else:
-                self.genderCbb.setItemText(1, "Nữ")
+                self.genderCbb.setItemText(1, "Nu")
             self.addressEmp.setText(str(self.tableNhanVien.item(selectedRow, 5).text()))
             self.ratingEmp.setText(str(self.tableNhanVien.item(selectedRow, 6).text()))
             self.majorCbb.setCurrentText(str(self.tableNhanVien.item(selectedRow, 8).text()))
@@ -384,9 +389,43 @@ class Ui_admin(object):
             self.ratingEmp.setText("")
             self.majorCbb.setCurrentText("")
             self.depCbb.setCurrentText("")
+            self.setTableRow()
+            self.loadData()
         except:
             traceback.print_exc()
 
+    def clickToEdit(self):
+        try:
+            sever = 'localhost'
+            database = 'HTTM'
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes;"
+                                  "MARS_Connection=yes")
+            idEmp = self.idEmp.text()
+            firstnameEmp = self.firstnameEmp.text()
+            print(type(firstnameEmp))
+            lastnameEmp = self.lastnameEmp.text()
+            temp = self.dobEmp.date()
+            dobEmp = temp.toPyDate()
+            genderEmp = self.genderCbb.currentText()
+            addressEmp = self.addressEmp.text()
+            majorEmp = self.majorCbb.currentText()
+            cursor1 = conn.cursor()
+            sqlMajor = cursor1.execute("SELECT IDMAJOR FROM MAJOR WHERE MAJOR.MAJOR = '" + str(majorEmp) + "'")
+            majorEmpSql = sqlMajor.fetchone()
+            depEmp = self.depCbb.currentText()
+            cursor2 = conn.cursor()
+            sqlDep = cursor2.execute("SELECT IDDEP FROM DEPARTMENT WHERE DEPARTMENT.DEPNAME = '" + str(depEmp) + "'")
+            depEmpSql = sqlDep.fetchone()
+            cursor = conn.cursor()
+            cursor.execute("UPDATE EMPLOYEE SET FISRTNAME = '" + str(firstnameEmp) + "', LASTNAME = '" + str(lastnameEmp) + "', DATEOFBIRTH = '" + str(dobEmp) + "', GENDER = '" + str(genderEmp) + "', ADDRESS = '" + str(addressEmp) + "', IDMAJOR = '" + str(majorEmpSql[0]) + "', IDDEP = '" + str(depEmpSql[0]) +"' WHERE EMPLOYEE.IDEMP = '" + idEmp + "'")
+            cursor.commit()
+            self.setTableRow()
+            self.loadData()
+        except:
+            traceback.print_exc()
     def clickToAdd(self):
         try:
             sever = 'localhost'
@@ -397,33 +436,43 @@ class Ui_admin(object):
                                   "Trusted_connection=yes;"
                                   "MARS_Connection=yes")
             firstnameEmp = self.firstnameEmp.text()
-            print(firstnameEmp)
             lastnameEmp = self.lastnameEmp.text()
-            print(lastnameEmp)
             temp = self.dobEmp.date()
             dobEmp = temp.toString("yyyy-MM-dd")
-            print(dobEmp)
             genderEmp = self.genderCbb.currentText()
-            print(genderEmp)
             addressEmp = self.addressEmp.text()
-            print(addressEmp)
             majorEmp = self.majorCbb.currentText()
             cursor = conn.cursor()
             sqlMajor = cursor.execute("SELECT IDMAJOR FROM MAJOR WHERE MAJOR.MAJOR = '" + str(majorEmp) + "'")
             majorEmpSql = sqlMajor.fetchone()
-            print(majorEmpSql[0])
             depEmp = self.depCbb.currentText()
             cursor2 = conn.cursor()
             sqlDep = cursor2.execute("SELECT IDDEP FROM DEPARTMENT WHERE DEPARTMENT.DEPNAME = '" + str(depEmp) + "'")
             depEmpSql = sqlDep.fetchone()
-            print(depEmpSql[0])
             cursor = conn.cursor()
             cursor.execute("INSERT INTO EMPLOYEE(FISRTNAME, LASTNAME, DATEOFBIRTH, GENDER, ADDRESS, AVGRATING, IDVC, IDMAJOR, USERNAME, IDDEP) VALUES(?,?,?,?,?,?,?,?,?,?)", (firstnameEmp, lastnameEmp, dobEmp, genderEmp, addressEmp, None, None, majorEmpSql[0], None, depEmpSql[0]))
             cursor.commit()
+            self.setTableRow()
             self.loadData()
         except:
             traceback.print_exc()
-
+    def clickToDel(self):
+        try:
+            sever = 'localhost'
+            database = 'HTTM'
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes;"
+                                  "MARS_Connection=yes")
+            idEmp = self.idEmp.text()
+            cursor = conn.cursor()
+            cursor.execute("DELETE EMPLOYEE WHERE EMPLOYEE.IDEMP = '" + idEmp + "'")
+            cursor.commit()
+            self.setTableRow()
+            self.loadData()
+        except:
+            traceback.print_exc()
     def openAccount(self):
         try:
             self.windowProject = QtWidgets.QDialog()
@@ -434,7 +483,6 @@ class Ui_admin(object):
             self.windowProject.show()
         except:
             traceback.print_exc()
-
     def openCreatAccount(self):
         try:
             import dialog_CreateAccount1
@@ -446,12 +494,22 @@ class Ui_admin(object):
             self.windowProject.show()
         except:
             traceback.print_exc()
-
+    def openAdmin(self):
+        try:
+            import admin
+            self.windowProject = QtWidgets.QMainWindow()
+            self.ui = admin.Ui_MainWindow()
+            self.ui.setupUi(self.windowProject)
+            self.windowProject.show()
+        except:
+            traceback.print_exc()
     def openCV(self):
         try:
             import dialog_CV
             self.windowProject=QtWidgets.QMainWindow()
             self.ui=dialog_CV.Ui_Dialog()
+            row = self.tableNhanVien.currentRow()
+            self.ui.set_id(self.tableNhanVien.item(row, 0).text())
             self.ui.setupUi(self.windowProject)
             self.windowProject.show()
         except:

@@ -12,6 +12,15 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     CV=['']
+    id = ""
+    def init(self, id=''):
+        self.id = id
+
+    def set_id(self, id):
+        self.id = id;
+
+    def get_id(self):
+        return self.id;
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(400, 300)
@@ -84,16 +93,100 @@ class Ui_Dialog(object):
         self.cancelBtn = QtWidgets.QPushButton(Dialog)
         self.cancelBtn.setGeometry(QtCore.QRect(310, 260, 56, 17))
         self.cancelBtn.setObjectName("cancelBtn")
-
+        self.loadForeignLanguages()
+        self.loadTeamworkSkills()
+        self.loadEducationLevels()
+        self.loadExp()
+        self.loadCommunicationSkills()
+        try:
+            self.cancelBtn.clicked.connect(Dialog.close)
+            self.cancelBtn.clicked.connect(self.openEmployee)
+        except:
+            traceback.print_exc()
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def loadID(self):
+        try:
+            self.idCV.setText(self.get_id())
+        except:
+            traceback.print_exc()
+
+    def loadForeignLanguages(self):
+        try:
+            fl = ["Beginner", "Elementary", "Intermediate", "Upper-Intermediate", "Advanced"]
+            for i in fl:
+                self.FLCbb.addItem(i)
+        except:
+            traceback.print_exc()
+
+    def loadTeamworkSkills(self):
+        try:
+            ts = ["Kem", "Kha", "Tot"]
+            for i in ts:
+                self.TSCbb.addItem(i)
+        except:
+            traceback.print_exc()
+
+    def loadExp(self):
+        try:
+            exp = ["Fesher", "Junior", "Senior", "Manager"]
+            for i in exp:
+                self.ExpCbb.addItem(i)
+        except:
+            traceback.print_exc()
+
+    def loadEducationLevels(self):
+        try:
+            el = ["THPT", "Trung cap nghe", "Cao dang", "Dai hoc", "Cao hoc"]
+            for i in el:
+                self.ELCbb.addItem(i)
+        except:
+            traceback.print_exc()
+
+    def loadCommunicationSkills(self):
+        try:
+            cs = ["Kem", "Kha", "Tot"]
+            for i in cs:
+                self.CSCbb.addItem(i)
+        except:
+            traceback.print_exc()
+
+    def okBtnCliked(self):
+        try:
+            sever = 'localhost'
+            database = 'HTTM'
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes;"
+                                  "MARS_Connection=yes")
+            fl = self.FLCbb.currentText()
+            ts = self.TSCbb.currentText()
+            exp = self.ExpCbb.currentText()
+            el = self.ELCbb.currentText()
+            cs = self.CSCbb.currentText()
+            cursor = conn.cursor()
+            sql = cursor.execute("INSERT INTO CV(FOREIGNLANGUAGES, TEAMWORKSKILLS, EXPERIENCE, EDUCATIONLEVEL, COMMUNICATIONSKILLS, IDEMP) VALUES(?, ?, ?, ?, ?, ?)", (fl, ts, exp, el, cs, self.get_id))
+            cursor.commit()
+        except:
+            traceback.print_exc()
+
+    def openEmployee(self):
+        try:
+            import Employee
+            self.windowProject = QtWidgets.QMainWindow()
+            self.ui = Employee.Ui_admin()
+            self.ui.setupUi(self.windowProject)
+            self.windowProject.show()
+        except:
+            traceback.print_exc()
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt; font-weight:700;\">CV</span></p></body></html>"))
         self.label_7.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:12pt;\">ID CV:</span></p></body></html>"))
-        self.idCV.setText(_translate("Dialog", "1"))
         self.label_2.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:12pt;\">Trình độ ngoại ngữ:</span></p></body></html>"))
         self.label_3.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:12pt;\">Kĩ năng làm việc nhóm:</span></p></body></html>"))
         self.label_4.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:12pt;\">Kinh nghiệm:</span></p></body></html>"))
@@ -101,20 +194,6 @@ class Ui_Dialog(object):
         self.label_6.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:12pt;\">Kĩ năng giao tiếp:</span></p></body></html>"))
         self.okBtn.setText(_translate("Dialog", "OK"))
         self.cancelBtn.setText(_translate("Dialog", "Cancel"))
-    def loaddata(self):
-        try:
-            sever = 'localhost'
-            database = 'HTTM'
-            print(pyodbc.drivers())
-            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
-                                  "Server=localhost;"
-                                  "Database=HTTM;"
-                                  "Trusted_connection=yes;"
-                                  "MARS_Connection=yes")
-            cursor = conn.cursor()
-            sql = cursor.execute("SELECT * FROM")
-        except:
-            traceback.print_exc()
 
 
 if __name__ == "__main__":

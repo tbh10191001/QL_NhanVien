@@ -76,6 +76,17 @@ class Ui_MainWindow(object):
         self.cancelBtn.setObjectName("cancelBtn")
         MainWindow.setCentralWidget(self.centralwidget)
         self.loadRoleCbb()
+        try:
+            self.okBtn.clicked.connect(self.addAccount)
+            self.okBtn.clicked.connect(MainWindow.close)
+        except:
+            traceback.print_exc()
+
+        try:
+            self.cancelBtn.clicked.connect(MainWindow.close)
+        except:
+            traceback.print_exc()
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -102,14 +113,27 @@ class Ui_MainWindow(object):
                                   "Database=HTTM;"
                                   "Trusted_connection=yes;"
                                   "MARS_Connection=yes")
-
-            cursor = conn.cursor()
             username = self.username.text()
             password = self.password.text()
             role = self.roleCbb.currentText()
+            cursor = conn.cursor()
+            sql = cursor.execute("SELECT IDROLE FROM ROLE WHERE ROLE.ROLENAME = '" + str(role) +"'")
+            idrole = sql.fetchone()
             idemp = self.get_id()
-            sql = cursor.execute("INSERT INTO ACCOUNT(USERNAME, PASSWORD, ENABLE, IDEMP, IDROLE) "
-                                 "VALUES (?, ?, ?, ?, ?), ('" + username + "', '" + password + "', '" + role + "', '" + idemp + "'")
+            print(1)
+            cursor1 = conn.cursor()
+            print(2)
+            cursor1.execute("UPDATE EMPLOYEE SET USERNAME = '" + username + "' WHERE EMPLOYEE.IDEMP = '" + idemp + "'")
+            print(3)
+            cursor1.commit()
+            print(4)
+            cursor2 = conn.cursor()
+            print(5)
+            cursor2.execute("INSERT INTO ACCOUNT(USERNAME, PASSWORD, ENABLE, IDEMP, IDROLE) VALUES(?, ?, ?, ?, ?)", (username, password, 1, int(idemp), idrole[0]))
+            print(6)
+            cursor2.commit()
+
+            print('hihi')
         except:
             traceback.format_exc()
 

@@ -52,6 +52,12 @@ class Ui_Dialog(object):
         try:
             username = self.inputAccount.text()
             password = self.lineEdit.text()
+            sever = 'localhost'
+            database = 'HTTM'
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes")
             cursor = conn.cursor()
             cursor.execute("SELECT USERNAME, PASSWORD FROM ACCOUNT WHERE USERNAME='"+username+"' AND PASSWORD='"+password+"'")
             user = cursor.fetchone()
@@ -96,7 +102,6 @@ class Ui_Dialog(object):
 if __name__ == "__main__":
     sever = 'localhost'
     database = 'HTTM'
-    print(pyodbc.drivers())
     conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
                           "Server=localhost;"
                           "Database=HTTM;"
