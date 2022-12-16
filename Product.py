@@ -8,15 +8,20 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+from PyQt6.QtCore import QDate
+import pyodbc
+import traceback
+from PyQt6.QtWidgets import QMessageBox
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(701, 493)
+        MainWindow.resize(854, 500)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tableSanpham = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableSanpham.setGeometry(QtCore.QRect(0, 0, 701, 341))
+        self.tableSanpham.setGeometry(QtCore.QRect(0, 0, 853, 341))
         self.tableSanpham.setObjectName("tableSanpham")
         self.tableSanpham.setColumnCount(7)
         self.tableSanpham.setRowCount(0)
@@ -59,60 +64,86 @@ class Ui_MainWindow(object):
         self.label.setGeometry(QtCore.QRect(20, 360, 58, 16))
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(150, 360, 31, 16))
+        self.label_2.setGeometry(QtCore.QRect(253, 360, 31, 16))
         self.label_2.setObjectName("label_2")
         self.labelIddoan = QtWidgets.QLabel(self.centralwidget)
-        self.labelIddoan.setGeometry(QtCore.QRect(90, 360, 41, 16))
+        self.labelIddoan.setGeometry(QtCore.QRect(80, 360, 41, 16))
         self.labelIddoan.setObjectName("labelIddoan")
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(181, 359, 341, 21))
+        self.lineEdit.setGeometry(QtCore.QRect(284, 355, 351, 25))
         self.lineEdit.setObjectName("lineEdit")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(20, 390, 91, 16))
+        self.label_3.setGeometry(QtCore.QRect(21, 390, 91, 16))
         self.label_3.setObjectName("label_3")
         self.startDay = QtWidgets.QDateEdit(self.centralwidget)
-        self.startDay.setGeometry(QtCore.QRect(109, 388, 110, 22))
+        self.startDay.setGeometry(QtCore.QRect(110, 388, 110, 22))
         self.startDay.setObjectName("startDay")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
-        self.label_4.setGeometry(QtCore.QRect(20, 420, 91, 16))
+        self.label_4.setGeometry(QtCore.QRect(21, 420, 91, 16))
         self.label_4.setObjectName("label_4")
         self.expDay = QtWidgets.QDateEdit(self.centralwidget)
-        self.expDay.setGeometry(QtCore.QRect(113, 418, 110, 22))
+        self.expDay.setGeometry(QtCore.QRect(111, 418, 110, 22))
         self.expDay.setObjectName("expDay")
         self.label_5 = QtWidgets.QLabel(self.centralwidget)
-        self.label_5.setGeometry(QtCore.QRect(20, 450, 71, 16))
+        self.label_5.setGeometry(QtCore.QRect(21, 450, 71, 16))
         self.label_5.setObjectName("label_5")
         self.label_6 = QtWidgets.QLabel(self.centralwidget)
-        self.label_6.setGeometry(QtCore.QRect(270, 390, 81, 16))
+        self.label_6.setGeometry(QtCore.QRect(354, 390, 81, 16))
         self.label_6.setObjectName("label_6")
-        self.comboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox.setGeometry(QtCore.QRect(336, 385, 191, 32))
-        self.comboBox.setObjectName("comboBox")
+        self.cmbEmployee = QtWidgets.QComboBox(self.centralwidget)
+        self.cmbEmployee.setGeometry(QtCore.QRect(420, 385, 215, 27))
+        self.cmbEmployee.setObjectName("cmbEmployee")
         self.exitBtn = QtWidgets.QPushButton(self.centralwidget)
-        self.exitBtn.setGeometry(QtCore.QRect(590, 358, 100, 32))
+        self.exitBtn.setGeometry(QtCore.QRect(749, 353, 91, 32))
         self.exitBtn.setObjectName("exitBtn")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(270, 446, 100, 32))
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(390, 446, 100, 32))
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setGeometry(QtCore.QRect(510, 446, 100, 32))
-        self.pushButton_3.setObjectName("pushButton_3")
+        self.resetBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.resetBtn.setGeometry(QtCore.QRect(354, 446, 91, 32))
+        self.resetBtn.setObjectName("resetBtn")
+        self.deleteBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.deleteBtn.setGeometry(QtCore.QRect(630, 446, 91, 32))
+        self.deleteBtn.setObjectName("deleteBtn")
+        self.editBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.editBtn.setGeometry(QtCore.QRect(750, 446, 91, 31))
+        self.editBtn.setObjectName("editBtn")
         self.label_7 = QtWidgets.QLabel(self.centralwidget)
-        self.label_7.setGeometry(QtCore.QRect(270, 420, 61, 16))
+        self.label_7.setGeometry(QtCore.QRect(354, 420, 61, 16))
         self.label_7.setObjectName("label_7")
-        self.comboBox_2 = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox_2.setGeometry(QtCore.QRect(328, 416, 103, 32))
-        self.comboBox_2.setObjectName("comboBox_2")
-        self.label_8 = QtWidgets.QLabel(self.centralwidget)
-        self.label_8.setGeometry(QtCore.QRect(89, 450, 58, 16))
-        self.label_8.setObjectName("label_8")
+        self.cmbRating = QtWidgets.QComboBox(self.centralwidget)
+        self.cmbRating.setGeometry(QtCore.QRect(420, 416, 124, 27))
+        self.cmbRating.setObjectName("cmbRating")
+        self.labelSubmitDay = QtWidgets.QLabel(self.centralwidget)
+        self.labelSubmitDay.setGeometry(QtCore.QRect(115, 450, 58, 16))
+        self.labelSubmitDay.setObjectName("labelSubmitDay")
+        self.addBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.addBtn.setGeometry(QtCore.QRect(490, 446, 91, 32))
+        self.addBtn.setObjectName("addBtn")
+        self.openBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.openBtn.setGeometry(QtCore.QRect(750, 400, 91, 32))
+        self.openBtn.setObjectName("openBtn")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        self.empIdNameList = {}
+        self.empRatingList = {}
+
+        self.startDay.setDisplayFormat("yyyy-MM-dd")
+        self.expDay.setDisplayFormat("yyyy-MM-dd")
+        self.tableSanpham.setColumnWidth(1, 256)
+        self.tableSanpham.setColumnWidth(5, 90)
+        self.tableSanpham.setColumnWidth(6, 90)
+
+        #listenerFunction
+        self.loadDataFromDB()
+        self.loadRatingCmb()
+        self.loadEmpNameCmb()
+        self.tableSanpham.clicked.connect(self.clickTableShowInfo)
+        self.addBtn.clicked.connect(self.clickToAdd)
+        self.deleteBtn.clicked.connect(self.clickToDelete)
+        self.resetBtn.clicked.connect(self.clickToReset)
+        self.editBtn.clicked.connect(self.clickToEdit)
+        self.openBtn.clicked.connect(self.clickToOpenProject)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -133,21 +164,243 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "ID Nhân viên"))
         self.label.setText(_translate("MainWindow", "ID Đồ án:"))
         self.label_2.setText(_translate("MainWindow", "Tên:"))
-        self.labelIddoan.setText(_translate("MainWindow", "1"))
+        self.labelIddoan.setText(_translate("MainWindow", ""))
         self.label_3.setText(_translate("MainWindow", "Ngày bắt đầu:"))
         self.label_4.setText(_translate("MainWindow", "Ngày kết thúc:"))
         self.label_5.setText(_translate("MainWindow", "Ngày nộp:"))
         self.label_6.setText(_translate("MainWindow", "Nhân viên:"))
         self.exitBtn.setText(_translate("MainWindow", "Thoát"))
-        self.pushButton.setText(_translate("MainWindow", "Thêm"))
-        self.pushButton_2.setText(_translate("MainWindow", "Xoá"))
-        self.pushButton_3.setText(_translate("MainWindow", "Sửa"))
+        self.resetBtn.setText(_translate("MainWindow", "Reset"))
+        self.deleteBtn.setText(_translate("MainWindow", "Xoá"))
+        self.editBtn.setText(_translate("MainWindow", "Sửa"))
         self.label_7.setText(_translate("MainWindow", "Đánh giá:"))
-        self.label_8.setText(_translate("MainWindow", "1/1/1111"))
+        self.labelSubmitDay.setText(_translate("MainWindow", ""))
+        self.addBtn.setText(_translate("MainWindow", "Thêm"))
+        self.openBtn.setText(_translate("MainWindow", "Xem đồ án"))
+
+    def loadDataFromDB(self):
+        self.tableSanpham.setRowCount(0)
+        try:
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes;"
+                                  "MARS_Connection=yes")
+            cursor = conn.cursor()
+            sqlQuery = cursor.execute("SELECT * FROM PRODUCT")
+            tableRow = 0
+            for rowData in sqlQuery:
+                rowNumber = self.tableSanpham.rowCount()
+                self.tableSanpham.insertRow(rowNumber)
+                for colNumber, data in enumerate(rowData):
+                    self.tableSanpham.setItem(rowNumber, colNumber, QtWidgets.QTableWidgetItem(str(data)))
+
+            ratingList = ["Kém", "Khá", "Tốt"]
+            for rowIndex in range(self.tableSanpham.rowCount()):
+                ratingNumber = self.tableSanpham.item(rowIndex, 5).text()
+                self.tableSanpham.setItem(rowIndex, 5, QtWidgets.QTableWidgetItem(
+                    ratingList[int(ratingNumber) - 1] if ratingNumber != "None" else "Chưa đánh giá"))
+
+                submitDate = self.tableSanpham.item(rowIndex, 4).text()
+                print(type(submitDate))
+                self.tableSanpham.setItem(rowIndex, 4, QtWidgets.QTableWidgetItem(
+                    "Chưa giao" if submitDate == "None" else submitDate))
+
+        except:
+            traceback.print_exc()
+
+    def clickTableShowInfo(self):
+        try:
+            currentRowNum = self.tableSanpham.currentRow()
+            self.labelIddoan.setText(str(self.tableSanpham.item(currentRowNum, 0).text()))
+            self.lineEdit.setText(str(self.tableSanpham.item(currentRowNum, 1).text()))
+            self.labelSubmitDay.setText(str(self.tableSanpham.item(currentRowNum, 4).text()))
+
+            tempDate = QDate.fromString(self.tableSanpham.item(currentRowNum, 2).text(), "yyyy-MM-dd")
+            self.startDay.setDate(tempDate)
+            tempDate2 = QDate.fromString(self.tableSanpham.item(currentRowNum, 3).text(), "yyyy-MM-dd")
+            self.expDay.setDate(tempDate2)
+            empIdCurrent = str(self.tableSanpham.item(currentRowNum, 6).text())
+            empRatingCurrent = str(self.tableSanpham.item(currentRowNum, 5).text())
+            for item, index in zip(self.empIdNameList.values(), range(len(self.empIdNameList))):
+                if item == empIdCurrent:
+                    self.cmbEmployee.setCurrentIndex(index)
+                    break
+            if empRatingCurrent in self.empRatingList.keys():
+                currentIndexRatingCmb = int(self.empRatingList.get(empRatingCurrent)) - 1
+                self.cmbRating.setCurrentIndex(currentIndexRatingCmb)
+            else:
+                self.cmbRating.setCurrentIndex(-1)
+        except:
+            traceback.print_exc()
+
+    def loadRatingCmb(self):
+
+        try:
+            self.empRatingList["Kém"] = "1"
+            self.empRatingList["Khá"] = "2"
+            self.empRatingList["Tốt"] = "3"
+            for item in self.empRatingList.keys():
+                self.cmbRating.addItem(item)
+        except:
+            traceback.print_exc()
+        self.cmbRating.setCurrentIndex(-1)
+
+    def loadEmpNameCmb(self):
+        try:
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes;"
+                                  "MARS_Connection=yes")
+            cursor = conn.cursor()
+            sql = cursor.execute("SELECT IDEMP, NAME = FISRTNAME + \' \' + LASTNAME FROM EMPLOYEE")
+            for data in sql:
+                _, empId = list(enumerate(data))[0]
+                _, empName = list(enumerate(data))[1]
+                self.empIdNameList[str(empId) + " - " + str(empName)] = str(empId)
+            for item in self.empIdNameList.keys():
+                self.cmbEmployee.addItem(item)
+                # print(item)
+        except:
+            traceback.print_exc()
+        self.cmbEmployee.setCurrentIndex(-1)
+
+    def clickToReset(self):
+        try:
+            self.labelIddoan.setText("")
+            self.lineEdit.setText("")
+            self.labelSubmitDay.setText("")
+            tempDate = QDate.fromString("2000-01-01", "yyyy-MM-dd")
+            self.startDay.setDate(tempDate)
+            tempDate2 = QDate.fromString("2000-01-01", "yyyy-MM-dd")
+            self.expDay.setDate(tempDate2)
+            self.cmbRating.setCurrentIndex(-1)
+            self.cmbEmployee.setCurrentIndex(-1)
+        except:
+            import traceback
+            traceback.print_exc()
+
+    def clickToAdd(self):
+        try:
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes;"
+                                  "MARS_Connection=yes")
+            nameProject = str(self.lineEdit.text())
+            assignDateStr = self.startDay.date().toString("yyyy-MM-dd")
+            assignDate = self.startDay.date()
+            expirationDateStr = self.expDay.date().toString("yyyy-MM-dd")
+            expDate = self.expDay.date()
+            idEmp = self.empIdNameList[self.cmbEmployee.currentText()] if self.cmbEmployee.currentIndex() != -1 else None
+            if nameProject == "" or idEmp is None:
+                self.showMessageBox("Please fill full information")
+                return
+            if assignDate >= expDate:
+                self.showMessageBox("Assignment date must be greater expiration date!")
+                return
+            if self.showMessageConfirm():
+                cursorExc = conn.cursor()
+                cursorExc.execute(
+                    "INSERT INTO PRODUCT(PRODUCTNAME, STARTDAY, EXPDAY, SUBMITDAY, RATING, IDEMP) VALUES(?,?,?,?,?,?)",
+                    (nameProject, assignDateStr, expirationDateStr, None, None, idEmp))
+                cursorExc.commit()
+                self.loadDataFromDB()
+        except:
+            traceback.print_exc()
+
+    def clickToEdit(self):
+        try:
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes;"
+                                  "MARS_Connection=yes")
+            idProduct = self.labelIddoan.text()
+            nameProject = str(self.lineEdit.text())
+            assignDate = self.startDay.date().toString("yyyy-MM-dd")
+            expirationDate = self.expDay.date().toString("yyyy-MM-dd")
+            idEmp = self.empIdNameList[self.cmbEmployee.currentText()] if self.cmbEmployee.currentIndex() != -1 else None
+            submitDate = self.labelSubmitDay.text() if self.labelSubmitDay.text() != "" else None
+            ratingEmp = self.cmbRating.currentIndex() + 1 if self.cmbRating.currentIndex() != -1 else None
+            print(nameProject, assignDate, expirationDate, submitDate, ratingEmp, idEmp, idProduct)
+
+            if nameProject == "" or idEmp is None or idProduct == "":
+                self.showMessageBox("Please fill full information")
+                return
+            if self.showMessageConfirm():
+                cursorExc = conn.cursor()
+                cursorExc.execute(
+                    """UPDATE PRODUCT SET PRODUCTNAME = (?), STARTDAY = (?), EXPDAY = (?), SUBMITDAY = (?), RATING = (?), 
+                    IDEMP = (?) WHERE IDPRODUCT = (?)""",
+                    (nameProject, assignDate, expirationDate, submitDate, str(ratingEmp), int(idEmp), int(idProduct)))
+                cursorExc.commit()
+                cursorExc.close()
+                self.loadDataFromDB()
+        except:
+            traceback.print_exc()
+
+    def clickToDelete(self):
+        try:
+            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                                  "Server=localhost;"
+                                  "Database=HTTM;"
+                                  "Trusted_connection=yes;"
+                                  "MARS_Connection=yes")
+            emdId = self.labelIddoan.text()
+            if emdId == "":
+                self.showMessageBox("Please choose a row to delete")
+                return
+            if self.showMessageConfirm():
+                cursorExc = conn.cursor()
+                cursorExc.execute("DELETE FROM PRODUCT WHERE IDPRODUCT = " + emdId)
+                cursorExc.commit()
+                self.loadDataFromDB()
+        except:
+            traceback.print_exc()
+
+    def clickToOpenProject(self):
+        import os
+
+        currentRowNum = self.tableSanpham.currentRow()
+        idProject = str(self.tableSanpham.item(currentRowNum, 0).text())
+        assignProjectYear = str(self.tableSanpham.item(self.tableSanpham.currentRow(), 2).text()).split("-")[0]
+        projectDir = f".\\Project Management\\{assignProjectYear}"
+        dirList = os.listdir(projectDir)
+        print(dirList)
+        isProjectExisted = False
+        for fileName in dirList:
+            if fileName.split("_")[0] == idProject:
+                import subprocess
+                filePath = os.path.join(projectDir, fileName)
+                print(filePath)
+                isProjectExisted = True
+                subprocess.Popen(f"explorer /select, \"{filePath}\"")
+                break
+        if not isProjectExisted:
+            self.showMessageBox("Project file not found!")
+    def showMessageConfirm(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Confirm!")
+        msg.setText("Are you sure you want to do this?")
+        msg.setIcon(QMessageBox.Icon.Question)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
+        result = msg.exec()
+        return result == QMessageBox.StandardButton.Ok
+
+    def showMessageBox(self, message):
+        msg = QMessageBox()
+        msg.setWindowTitle("Message!")
+        msg.setText(message)
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.exec()
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

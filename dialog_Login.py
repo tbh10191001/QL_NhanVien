@@ -11,7 +11,11 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 import pyodbc
 from tkinter import *
 from tkinter import messagebox
+
+import admin
+import employeeMain
 from admin import Ui_MainWindow
+import employeeMain
 
 
 class Ui_Dialog(object):
@@ -48,17 +52,17 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
+        self.mainDialogCopy = Dialog
+        self.conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
+                              "Server=localhost;"
+                              "Database=HTTM;"
+                              "Trusted_connection=yes")
+
     def login(self):
         try:
             username = self.inputAccount.text()
             password = self.lineEdit.text()
-            sever = 'localhost'
-            database = 'HTTM'
-            conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
-                                  "Server=localhost;"
-                                  "Database=HTTM;"
-                                  "Trusted_connection=yes")
-            cursor = conn.cursor()
+            cursor = self.conn.cursor()
             cursor.execute("SELECT USERNAME, PASSWORD FROM ACCOUNT WHERE USERNAME='"+username+"' AND PASSWORD='"+password+"'")
             user = cursor.fetchone()
             print(user)
@@ -66,16 +70,18 @@ class Ui_Dialog(object):
                 master = Tk()
                 master.withdraw()
                 messagebox.showinfo('Login', 'Yes')
-                cursor.execute("SELECT IDROLE FROM ACCOUNT WHERE ACCOUNT.USERNAME = '" + username + "'")
+                cursor.execute("SELECT IDROLE, IDEMP FROM ACCOUNT WHERE ACCOUNT.USERNAME = '" + username + "'")
                 idUser = cursor.fetchone()
                 print(idUser)
-                if idUser[0] == 1:
-                    self.window = QtWidgets.QMainWindow()
-                    self.ui = Ui_MainWindow()
-                    print(type(self.window))
-                    self.ui.setupUi(self.window)
-                    self.window.show()
-                    Dialog.hide()
+                self.openCorrespondingWindow(idUser[1], idUser[0])
+                # if idUser[0] == 1:
+                #     print()
+                #     self.window = QtWidgets.QMainWindow()
+                #     self.ui = Ui_MainWindow()
+                #     print(type(self.window))
+                #     self.ui.setupUi(self.window)
+                #     self.window.show()
+                #     Dialog.hide()
             else:
                 master = Tk()
                 master.withdraw()
@@ -98,14 +104,21 @@ class Ui_Dialog(object):
         self.signinBtn.setText(_translate("Dialog", "Đăng nhập"))
         self.pushButton.setText(_translate("Dialog", "Thoát"))
 
+    def openCorrespondingWindow(self, idEmp, idRole):
+        try:
+            self.windowEmployeeMain = QtWidgets.QMainWindow()
+            self.ui = employeeMain.Ui_MainWindow() if idRole != 1 else admin.Ui_MainWindow()
+            self.ui.setupUi(self.windowEmployeeMain, idEmp)
+            self.windowEmployeeMain.show()
+            self.mainDialogCopy.close()
+        except:
+            traceback.print_exc()
+
 
 if __name__ == "__main__":
     sever = 'localhost'
     database = 'HTTM'
-    conn = pyodbc.connect("DRIVER={SQL Server Native Client 11.0};"
-                          "Server=localhost;"
-                          "Database=HTTM;"
-                          "Trusted_connection=yes")
+    print(pyodbc.drivers())
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()

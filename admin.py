@@ -15,10 +15,8 @@ import Department
 import ai
 
 
-
-
 class Ui_MainWindow:
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow, idEmpPara):
         MainWindow.setObjectName("MainWindaaaaow")
         MainWindow.resize(431, 396)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -110,25 +108,28 @@ class Ui_MainWindow:
         self.pushButton_5.setText(_translate("MainWindow", "Quản lí phòng ban"))
         self.pushButton_7.setText(_translate("MainWindow", "Quản lí chức năng thông minh"))
         self.pushButton_6.setText(_translate("MainWindow", "Thoát"))
-        self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:600;\">QUẢN LÍ</span></p></body></html>"))
+        self.label.setText(_translate("MainWindow",
+                                      "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:600;\">QUẢN LÍ</span></p></body></html>"))
 
     def OpenEmployee(self):
         try:
-            #print(type(self.window))
+            # print(type(self.window))
             self.window = QtWidgets.QMainWindow()
             self.ui = Employee.Ui_admin()
             self.ui.setupUi(self.window)
             self.window.show()
         except:
             traceback.print_exc()
+
     def OpenProject(self):
         try:
-            self.windowProject= QtWidgets.QMainWindow()
+            self.windowProject = QtWidgets.QMainWindow()
             self.ui = Product.Ui_MainWindow()
             self.ui.setupUi(self.windowProject)
             self.windowProject.show()
         except:
             traceback.print_exc()
+
     def OpenMajor(self):
         try:
             self.windowProject = QtWidgets.QMainWindow()
@@ -137,6 +138,7 @@ class Ui_MainWindow:
             self.windowProject.show()
         except:
             traceback.print_exc()
+
     def OpenRole(self):
         try:
             self.windowProject = QtWidgets.QMainWindow()
@@ -145,6 +147,7 @@ class Ui_MainWindow:
             self.windowProject.show()
         except:
             traceback.print_exc()
+
     def OpenDepartment(self):
         try:
             self.windowProject = QtWidgets.QMainWindow()
@@ -153,6 +156,7 @@ class Ui_MainWindow:
             self.windowProject.show()
         except:
             traceback.print_exc()
+
     def OpenAI(self):
         try:
             self.windowProject = QtWidgets.QMainWindow()
@@ -161,6 +165,7 @@ class Ui_MainWindow:
             self.windowProject.show()
         except:
             traceback.print_exc()
+
     def Exit(self):
         try:
             import dialog_Login
@@ -171,11 +176,13 @@ class Ui_MainWindow:
         except:
             traceback.print_exc()
 
+
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui.setupUi(MainWindow, "7")
     MainWindow.show()
     sys.exit(app.exec())
