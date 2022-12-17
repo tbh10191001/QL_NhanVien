@@ -15,6 +15,7 @@ import traceback
 import re
 import employeeMain
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow, idEmpPara):
         MainWindow.setObjectName("MainWindow")
@@ -133,7 +134,7 @@ class Ui_MainWindow(object):
         self.loadDataFromDB()
         self.hideButton()
 
-        #listenerFunctions
+        # listenerFunctions
         self.pushButton.clicked.connect(self.askDirectory)
         self.pushButton_2.clicked.connect(self.clickToBackMainEmpWindow)
         self.tableSanpham.clicked.connect(self.clickTableShowInfo)
@@ -151,7 +152,8 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Ngày kết thúc"))
         item = self.tableSanpham.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Ngày nộp"))
-        self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt; font-weight:700;\">ĐỒ ÁN CÁ NHÂN</span></p></body></html>"))
+        self.label.setText(_translate("MainWindow",
+                                      "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt; font-weight:700;\">ĐỒ ÁN CÁ NHÂN</span></p></body></html>"))
         self.label_2.setText(_translate("MainWindow", "ID Đồ án:"))
         self.label_3.setText(_translate("MainWindow", ""))
         self.label_4.setText(_translate("MainWindow", "Tên:"))
@@ -197,7 +199,8 @@ class Ui_MainWindow(object):
                     idProject = self.label_3.text()
                     submitDate = date.today().strftime("%Y-%m-%d")
                     cursorExc = conn.cursor()
-                    cursorExc.execute("""UPDATE PRODUCT SET SUBMITDAY= (?) WHERE IDPRODUCT = (?)""",(submitDate, idProject))
+                    cursorExc.execute("""UPDATE PRODUCT SET SUBMITDAY= (?) WHERE IDPRODUCT = (?)""",
+                                      (submitDate, idProject))
                     cursorExc.commit()
                     cursorExc.close()
                 except:
@@ -205,6 +208,7 @@ class Ui_MainWindow(object):
                 self.loadDataFromDB()
         except:
             traceback.print_exc()
+
     def loadDataFromDB(self):
         self.tableSanpham.setRowCount(0)
         try:
@@ -277,7 +281,7 @@ class Ui_MainWindow(object):
             '[òóỏõọôồốổỗộơờớởỡợ]': 'o',
             '[ùúủũụưừứửữự]': 'u',
             '[ỳýỷỹỵ]': 'y'
-            }
+        }
         output = text
         for regex, replace in patterns.items():
             output = re.sub(regex, replace, output)
@@ -296,8 +300,27 @@ class Ui_MainWindow(object):
             traceback.print_exc()
 
 
+def convertAccentedToUnsigned(text):
+    patterns = {
+        '[àáảãạăắằẵặẳâầấậẫẩ]': 'a',
+        '[đ]': 'd',
+        '[èéẻẽẹêềếểễệ]': 'e',
+        '[ìíỉĩị]': 'i',
+        '[òóỏõọôồốổỗộơờớởỡợ]': 'o',
+        '[ùúủũụưừứửữự]': 'u',
+        '[ỳýỷỹỵ]': 'y'
+    }
+    output = text
+    for regex, replace in patterns.items():
+        output = re.sub(regex, replace, output)
+        # deal with upper case
+        output = re.sub(regex.upper(), replace.upper(), output)
+    return output
+
+
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
