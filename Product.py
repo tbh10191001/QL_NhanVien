@@ -12,6 +12,7 @@ from PyQt6.QtCore import QDate
 import pyodbc
 import traceback
 from PyQt6.QtWidgets import QMessageBox
+import admin
 
 
 class Ui_MainWindow(object):
@@ -127,6 +128,7 @@ class Ui_MainWindow(object):
 
         self.empIdNameList = {}
         self.empRatingList = {}
+        self.mainWindowCopy = MainWindow
 
         self.startDay.setDisplayFormat("yyyy-MM-dd")
         self.expDay.setDisplayFormat("yyyy-MM-dd")
@@ -144,6 +146,7 @@ class Ui_MainWindow(object):
         self.resetBtn.clicked.connect(self.clickToReset)
         self.editBtn.clicked.connect(self.clickToEdit)
         self.openBtn.clicked.connect(self.clickToOpenProject)
+        self.exitBtn.clicked.connect(self.clickToBackMainManagerWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -195,11 +198,11 @@ class Ui_MainWindow(object):
                 for colNumber, data in enumerate(rowData):
                     self.tableSanpham.setItem(rowNumber, colNumber, QtWidgets.QTableWidgetItem(str(data)))
 
-            ratingList = ["Kém", "Khá", "Tốt"]
+            ratingList = ["Kem", "Kha", "Tot"]
             for rowIndex in range(self.tableSanpham.rowCount()):
                 ratingNumber = self.tableSanpham.item(rowIndex, 5).text()
                 self.tableSanpham.setItem(rowIndex, 5, QtWidgets.QTableWidgetItem(
-                    ratingList[int(ratingNumber) - 1] if ratingNumber != "None" else "Chưa đánh giá"))
+                    "Chưa đánh giá" if ratingNumber == "None" else ratingNumber))
 
                 submitDate = self.tableSanpham.item(rowIndex, 4).text()
                 print(type(submitDate))
@@ -237,9 +240,9 @@ class Ui_MainWindow(object):
     def loadRatingCmb(self):
 
         try:
-            self.empRatingList["Kém"] = "1"
-            self.empRatingList["Khá"] = "2"
-            self.empRatingList["Tốt"] = "3"
+            self.empRatingList["Kem"] = "1"
+            self.empRatingList["Kha"] = "2"
+            self.empRatingList["Tot"] = "3"
             for item in self.empRatingList.keys():
                 self.cmbRating.addItem(item)
         except:
@@ -396,6 +399,16 @@ class Ui_MainWindow(object):
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.exec()
+
+    def clickToBackMainManagerWindow(self):
+        try:
+            self.windowManagerMain = QtWidgets.QMainWindow()
+            self.ui = admin.Ui_MainWindow()
+            self.ui.setupUi(self.windowManagerMain)
+            self.windowManagerMain.show()
+            self.mainWindowCopy.close()
+        except:
+            traceback.print_exc()
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ import ai
 
 
 class Ui_MainWindow:
-    def setupUi(self, MainWindow, idEmpPara):
+    def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindaaaaow")
         MainWindow.resize(431, 396)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
