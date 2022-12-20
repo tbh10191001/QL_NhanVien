@@ -142,7 +142,7 @@ class Ui_MainWindow:
     def OpenRole(self):
         try:
             self.windowProject = QtWidgets.QMainWindow()
-            self.ui = Role.Ui_MainWindow()
+            self.ui = Role.Ui_tableRole()
             self.ui.setupUi(self.windowProject)
             self.windowProject.show()
         except:

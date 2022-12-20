@@ -174,7 +174,7 @@ class Ui_MainWindow(object):
             import shutil
 
             self.filePathSubmit = \
-                str(QtWidgets.QFileDialog.getOpenFileName(MainWindow, 'Hey! Select a File')).split("'")[1]
+                str(QtWidgets.QFileDialog.getOpenFileName(self.mainWindowCopy, 'Hey! Select a File')).split("'")[1]
             if self.filePathSubmit == "":
                 return
             fileName = self.filePathSubmit.split(r"/")[len(self.filePathSubmit.split(r"/")) - 1]
@@ -249,6 +249,8 @@ class Ui_MainWindow(object):
                 self.showButton("Nộp")
             elif expDate.date() >= date.today():
                 self.showButton("Nộp lại")
+            else:
+                self.hideButton()
         except:
             import traceback
             traceback.print_exc()

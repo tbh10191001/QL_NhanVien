@@ -305,6 +305,7 @@ class Ui_MainWindow(object):
                 return
             if self.showMessageConfirm():
                 cursorExc = conn.cursor()
+                print(assignDateStr, expirationDateStr)
                 cursorExc.execute(
                     "INSERT INTO PRODUCT(PRODUCTNAME, STARTDAY, EXPDAY, SUBMITDAY, RATING, IDEMP) VALUES(?,?,?,?,?,?)",
                     (nameProject, assignDateStr, expirationDateStr, None, None, idEmp))
@@ -325,7 +326,7 @@ class Ui_MainWindow(object):
             assignDate = self.startDay.date().toString("yyyy-MM-dd")
             expirationDate = self.expDay.date().toString("yyyy-MM-dd")
             idEmp = self.empIdNameList[self.cmbEmployee.currentText()] if self.cmbEmployee.currentIndex() != -1 else None
-            submitDate = self.labelSubmitDay.text() if self.labelSubmitDay.text() != "" else None
+            submitDate = self.labelSubmitDay.text() if self.labelSubmitDay.text() != "Chưa giao" or self.labelSubmitDay.text() == "" else None
             ratingEmp = self.cmbRating.currentIndex() + 1 if self.cmbRating.currentIndex() != -1 else None
             print(nameProject, assignDate, expirationDate, submitDate, ratingEmp, idEmp, idProduct)
 
@@ -334,6 +335,7 @@ class Ui_MainWindow(object):
                 return
             if self.showMessageConfirm():
                 cursorExc = conn.cursor()
+                print(assignDate, expirationDate)
                 cursorExc.execute(
                     """UPDATE PRODUCT SET PRODUCTNAME = (?), STARTDAY = (?), EXPDAY = (?), SUBMITDAY = (?), RATING = (?), 
                     IDEMP = (?) WHERE IDPRODUCT = (?)""",

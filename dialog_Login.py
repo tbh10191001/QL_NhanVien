@@ -107,8 +107,12 @@ class Ui_Dialog(object):
     def openCorrespondingWindow(self, idEmp, idRole):
         try:
             self.windowEmployeeMain = QtWidgets.QMainWindow()
-            self.ui = employeeMain.Ui_MainWindow() if idRole != 1 else admin.Ui_MainWindow()
-            self.ui.setupUi(self.windowEmployeeMain, idEmp)
+            if idRole != 1:
+                self.ui = employeeMain.Ui_MainWindow()
+                self.ui.setupUi(self.windowEmployeeMain, idEmp)
+            else:
+                self.ui = admin.Ui_MainWindow()
+                self.ui.setupUi(self.windowEmployeeMain)
             self.windowEmployeeMain.show()
             self.mainDialogCopy.close()
         except:
