@@ -227,7 +227,7 @@ class Ui_Dialog(object):
     def useTree(self):
         load_model=pickle.load(open("tree.h5","rb"))
         df = pd.DataFrame(self.CV,columns=['Hoc van', 'TD Tieng Anh','Lam viec nhom','KN Giao Tiep','Experience'])
-        df['Hoc van'].replace(['THPT', 'TC nghe', 'Cao dang ', 'Dai hoc', 'Cao hoc'], [1, 2, 3, 4, 5], inplace=True)
+        df['Hoc van'].replace(['THPT', 'TC nghe', 'Cao dang', 'Dai hoc', 'Cao hoc'], [1, 2, 3, 4, 5], inplace=True)
         df['TD Tieng Anh'].replace(['Beginner', 'Elementary', 'Intermediate', 'Upper-Intermediate', 'Advanced'],
                                    [1, 2, 3, 4, 5], inplace=True)
         df['Lam viec nhom'].replace(['Kem', 'Kha', 'Tot'], [1, 2, 3], inplace=True)

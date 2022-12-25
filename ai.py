@@ -129,7 +129,7 @@ class Ui_MainWindow(object):
             df2=pd.DataFrame(y,columns=['RATING'])
             print(df.shape)
             print(df2.shape)
-            df['Hoc van'].replace(['THPT', 'TC nghe', 'Cao dang ', 'Dai hoc', 'Cao hoc'], [1, 2, 3, 4, 5, ],
+            df['Hoc van'].replace(['THPT', 'TC nghe', 'Cao dang', 'Dai hoc', 'Cao hoc'], [1, 2, 3, 4, 5, ],
                                   inplace=True)
             df['TD Tieng Anh'].replace(['Beginner', 'Elementary', 'Intermediate', 'Upper-Intermediate', 'Advanced'],
                                        [1, 2, 3, 4, 5], inplace=True)
